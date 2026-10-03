@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Leaf Cafe | Your New Hangout</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-dark: #070a08; 
@@ -27,59 +28,166 @@
             scroll-behavior: smooth;
         }
 
+        /* Lock scrolling while intro screen is visible */
+        body.no-scroll { overflow: hidden; }
+
         h1, h2, h3, .logo { font-family: 'Cormorant Garamond', serif; }
 
-        /* Navigation */
-        header {
+        @media (pointer: fine) {
+            body { cursor: none; }
+            a, button, input, select { cursor: none; }
+        }
+
+        .cursor-dot, .cursor-outline {
             position: fixed;
-            top: 0; width: 100%;
-            padding: 1.2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(7, 10, 8, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            z-index: 1000;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 10000;
+            pointer-events: none;
         }
 
-        .logo { font-size: 2rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
-        
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            margin-left: 2.5rem;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 500;
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: var(--accent);
         }
-        .nav-links a:hover { color: var(--accent); }
 
-        /* Hero Section with Floating Embers */
-        .hero {
-            height: 100vh;
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(229, 141, 46, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .cursor-outline.hover {
+            width: 60px; height: 60px;
+            background-color: rgba(229, 141, 46, 0.1);
+            border-color: var(--accent);
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 10001;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        #intro-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 9999;
+            /* Deep dark background with subtle radial glow */
+            background: radial-gradient(circle at center, #17241c 0%, #070a08 70%);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            position: relative;
-            background: linear-gradient(rgba(7, 10, 8, 0.6), rgba(7, 10, 8, 1)), 
-                        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2000&auto=format&fit=crop') center/cover;
-            padding: 0 1.5rem;
-            overflow: hidden;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s ease;
         }
 
-        /* Floating particles */
+        #intro-screen.hidden {
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Sequential fade-in animations for intro */
+        .intro-seq {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes seqFadeUp {
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .seq-1 { animation: seqFadeUp 1s ease forwards 0.5s; }
+        .seq-2 { animation: seqFadeUp 1s ease forwards 1.2s; }
+        .seq-3 { animation: seqFadeUp 1s ease forwards 1.9s; }
+        
+        /* The button fades in, then starts an infinite pulse */
+        .seq-4 { 
+            animation: seqFadeUp 1s ease forwards 2.6s, pulse-glow 2s infinite 3.6s; 
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(229, 141, 46, 0.6); }
+            70% { box-shadow: 0 0 0 20px rgba(229, 141, 46, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 141, 46, 0); }
+        }
+
+        .intro-yokoso {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent);
+            letter-spacing: 8px;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .intro-logo {
+            font-size: clamp(4rem, 10vw, 7rem);
+            color: var(--text-main);
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem; color: var(--text-muted); letter-spacing: 4px;
+            text-transform: uppercase; margin-bottom: 4rem;
+        }
+
+        .intro-btn {
+            background: transparent; color: var(--accent); border: 1px solid var(--accent);
+            padding: 1.2rem 3.5rem; border-radius: 50px; font-size: 1.1rem;
+            text-transform: uppercase; letter-spacing: 3px; transition: all 0.4s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .intro-btn:hover { 
+            background: var(--accent); color: #000; 
+            transform: scale(1.05); 
+            /* Stop pulse on hover and replace with solid glow */
+            animation: none;
+            box-shadow: 0 0 30px rgba(229, 141, 46, 0.5);
+        }
+
+        header {
+            position: fixed; top: 0; width: 100%; padding: 1.5rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(7, 10, 8, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000;
+        }
+        
+        .logo { font-size: 2rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+        
+        .nav-links a {
+            color: var(--text-main); text-decoration: none; margin-left: 2.5rem;
+            font-size: 0.9rem; transition: color 0.3s; text-transform: uppercase; letter-spacing: 2px;
+        }
+        
+        .nav-links a:hover { color: var(--accent); }
+
+        .hero {
+            height: 100vh;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            position: relative;
+            background: linear-gradient(rgba(7, 10, 8, 0.7), rgba(7, 10, 8, 1)), 
+                        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2000&auto=format&fit=crop') center/cover;
+            background-attachment: fixed; /* Parallax effect */
+            padding: 0 1.5rem; overflow: hidden;
+        }
+
         .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .particle {
-            position: absolute;
-            background: var(--accent);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float 8s infinite linear;
+            position: absolute; background: var(--accent); border-radius: 50%; opacity: 0;
+            animation: float 8s infinite linear; box-shadow: 0 0 10px var(--accent);
         }
         @keyframes float {
             0% { transform: translateY(100vh) translateX(0); opacity: 0; }
@@ -90,15 +198,18 @@
 
         .hero-content { position: relative; z-index: 2; }
         .hero-content h1 {
-            font-size: clamp(3.5rem, 8vw, 7rem);
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 4px 20px rgba(0,0,0,0.8);
+            font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 1.05;
+            margin-bottom: 1.5rem; text-shadow: 2px 4px 20px rgba(0,0,0,0.8);
+            min-height: 1.2em; /* Prevents layout shift during typing */
         }
-        .hero-content p {
-            font-size: 1.2rem; color: #d1d6d3; max-width: 650px; margin: 0 auto 2.5rem auto; letter-spacing: 1px;
+        
+        .typing-cursor::after {
+            content: '|'; animation: blink 1s infinite step-start; color: var(--accent);
         }
+        @keyframes blink { 50% { opacity: 0; } }
 
+        .hero-content p { font-size: 1.2rem; color: #d1d6d3; max-width: 650px; margin: 0 auto 2.5rem auto; letter-spacing: 1px; }
+        
         .btn {
             background: var(--accent); color: #000; padding: 1rem 3rem; border-radius: 50px;
             text-decoration: none; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
@@ -106,24 +217,20 @@
         }
         .btn:hover { background: transparent; color: var(--accent); box-shadow: 0 10px 20px rgba(229, 141, 46, 0.2); transform: translateY(-3px); }
 
-        /* General Sections */
         section { padding: 8rem 5%; max-width: 1400px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 5rem; }
         .section-header h2 { font-size: 3.5rem; color: var(--accent); margin-bottom: 1rem; }
         .section-header p { color: var(--text-muted); font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* Story Section */
         .story-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
         .story-text h3 { font-size: 2.5rem; margin-bottom: 1.5rem; }
         .story-text p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1.1rem; }
-        .story-img { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .story-img img { width: 100%; height: auto; display: block; filter: brightness(0.85); transition: 0.5s; }
-        .story-img:hover img { filter: brightness(1); transform: scale(1.03); }
+        .story-img { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; }
+        .story-img img { width: 100%; height: auto; display: block; filter: brightness(0.85); transition: 0.7s; }
+        .story-img:hover img { filter: brightness(1.1); transform: scale(1.05); }
 
-        /* Expanded Menu */
         .menu-category { margin-bottom: 4rem; }
-        .menu-category h3 { font-size: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem; color: var(--text-main); }
-        
+        .menu-category h3 { font-size: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem; }
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; }
         
         .menu-card {
@@ -131,23 +238,42 @@
             border: 1px solid rgba(255,255,255,0.03); transition: all 0.4s ease;
         }
         .menu-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(0,0,0,0.6); }
-        
         .menu-img { height: 260px; width: 100%; overflow: hidden; }
         .menu-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; filter: brightness(0.9); }
         .menu-card:hover .menu-img img { transform: scale(1.1); filter: brightness(1); }
         
         .menu-info { padding: 2rem; }
-        .menu-info h4 { font-size: 1.6rem; font-family: 'Cormorant Garamond', serif; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+        .menu-info h4 { font-size: 1.6rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
         .price { color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 1.2rem; }
         .menu-info p { color: var(--text-muted); font-size: 0.95rem; }
 
-        /* Reservation Form (Glassmorphism) */
+        .testimonials {
+            background: #040605; padding: 6rem 0; overflow: hidden;
+            border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .marquee-wrapper { display: flex; width: 200%; animation: scroll-marquee 30s linear infinite; }
+        .marquee-wrapper:hover { animation-play-state: paused; }
+        
+        .testimonial-card {
+            background: var(--bg-card); padding: 2rem; border-radius: 16px;
+            margin: 0 1.5rem; min-width: 400px; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .testimonial-card:hover { border-color: var(--accent); }
+        .testimonial-card p { font-style: italic; color: #d1d6d3; margin-bottom: 1rem; font-size: 1.1rem; }
+        .testimonial-author { color: var(--accent); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        @keyframes scroll-marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
         .reservation-section {
             background: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1500&auto=format&fit=crop') center/cover;
-            padding: 8rem 5%; position: relative;
+            background-attachment: fixed; 
+            padding: 10rem 5%; position: relative;
         }
         .reservation-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7,10,8,0.85); }
-        
         .form-container {
             position: relative; z-index: 2; max-width: 700px; margin: 0 auto;
             background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -155,24 +281,21 @@
         }
         .form-container h2 { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
         .form-container p { color: var(--text-muted); margin-bottom: 3rem; }
-        
         .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         input, select {
-            width: 100%; padding: 1.2rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+            width: 100%; padding: 1.2rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
             color: white; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 1rem; outline: none; transition: 0.3s;
         }
-        input:focus, select:focus { border-color: var(--accent); background: rgba(0,0,0,0.6); }
-        .form-container .btn { width: 100%; margin-top: 1rem; cursor: pointer; }
+        input:focus, select:focus { border-color: var(--accent); background: rgba(0,0,0,0.8); }
+        .form-container .btn { width: 100%; margin-top: 1rem; cursor: none; }
 
-        /* Footer */
-        footer { background: #040605; padding: 5rem 5% 2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        footer { background: #040605; padding: 5rem 5% 2rem; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; max-width: 1400px; margin: 0 auto; margin-bottom: 4rem; }
         .footer-col h4 { color: var(--accent); font-size: 1.4rem; margin-bottom: 1.5rem; font-family: 'Cormorant Garamond', serif; }
         .footer-col p, .footer-col a { color: var(--text-muted); text-decoration: none; display: block; margin-bottom: 0.8rem; transition: 0.3s; }
         .footer-col a:hover { color: var(--text-main); }
         .footer-bottom { text-align: center; color: #4a524e; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2rem; }
 
-        /* Animations */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -180,33 +303,48 @@
             .story-container { grid-template-columns: 1fr; }
             .nav-links { display: none; }
             .input-group { grid-template-columns: 1fr; }
-            .form-container { padding: 2rem; }
+            .testimonial-card { min-width: 300px; }
+            .hero, .reservation-section { background-attachment: scroll; }
         }
     </style>
 </head>
-<body>
+<body class="no-scroll">
+
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div id="intro-screen">
+        <div class="intro-content">
+            <span class="intro-yokoso intro-seq seq-1">Y Ō K O S O</span>
+            <h1 class="intro-logo intro-seq seq-2">Green Leaf</h1>
+            <p class="intro-subtitle intro-seq seq-3">Leave the noise behind.</p>
+            <button id="enter-btn" class="intro-btn intro-seq seq-4">Enter the Village</button>
+        </div>
+    </div>
 
     <header>
         <div class="logo">Green Leaf</div>
         <div class="nav-links">
-            <a href="#story">Our Story</a>
-            <a href="#menu">Menu</a>
-            <a href="#reservations">Reservations</a>
+            <a href="#story" class="hover-target">Our Story</a>
+            <a href="#menu" class="hover-target">Menu</a>
+            <a href="#reservations" class="hover-target">Reservations</a>
         </div>
     </header>
 
     <div class="hero">
         <div class="particles" id="particles"></div>
-        <div class="hero-content reveal active">
-            <h1>Find your center.<br>Fuel your spirit.</h1>
+        <div class="hero-content reveal">
+            <!-- Typing effect will populate here -->
+            <h1 id="type-text" class="typing-cursor"></h1>
             <p>Hand-pulled noodles, slow-simmered broths, and specialty coffee poured with precision. Welcome to the village's best kept secret.</p>
-            <a href="#menu" class="btn">View The Menu</a>
+            <a href="#menu" class="btn hover-target">View The Menu</a>
         </div>
     </div>
 
     <section id="story">
         <div class="story-container reveal">
-            <div class="story-img">
+            <div class="story-img hover-target">
                 <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000&auto=format&fit=crop" alt="Cafe Interior">
             </div>
             <div class="story-text">
@@ -227,14 +365,14 @@
         <div class="menu-category reveal">
             <h3>Ramen Bowls</h3>
             <div class="menu-grid">
-                <div class="menu-card">
+                <div class="menu-card hover-target">
                     <div class="menu-img"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800&auto=format&fit=crop" alt="Spicy Miso"></div>
                     <div class="menu-info">
                         <h4>Spicy Fire Miso <span class="price">₹350</span></h4>
                         <p>18-hour pork broth, house-made chili paste, chashu pork, soft egg, bamboo shoots, scallions.</p>
                     </div>
                 </div>
-                <div class="menu-card">
+                <div class="menu-card hover-target">
                     <div class="menu-img"><img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?q=80&w=800&auto=format&fit=crop" alt="Shoyu Ramen"></div>
                     <div class="menu-info">
                         <h4>Classic Shoyu <span class="price">₹320</span></h4>
@@ -247,14 +385,14 @@
         <div class="menu-category reveal">
             <h3>Sides & Shareables</h3>
             <div class="menu-grid">
-                <div class="menu-card">
+                <div class="menu-card hover-target">
                     <div class="menu-img"><img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?q=80&w=800&auto=format&fit=crop" alt="Gyoza"></div>
                     <div class="menu-info">
                         <h4>Pan-Seared Gyoza <span class="price">₹220</span></h4>
                         <p>Six handmade pork and cabbage dumplings, crisped to perfection. Served with black vinegar dip.</p>
                     </div>
                 </div>
-                <div class="menu-card">
+                <div class="menu-card hover-target">
                     <div class="menu-img"><img src="https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?q=80&w=800&auto=format&fit=crop" alt="Karaage"></div>
                     <div class="menu-info">
                         <h4>Chicken Karaage <span class="price">₹260</span></h4>
@@ -267,14 +405,14 @@
         <div class="menu-category reveal">
             <h3>Brews & Matcha</h3>
             <div class="menu-grid">
-                <div class="menu-card">
+                <div class="menu-card hover-target">
                     <div class="menu-img"><img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=800&auto=format&fit=crop" alt="Pour Over"></div>
                     <div class="menu-info">
                         <h4>Single Origin Pour-Over <span class="price">₹180</span></h4>
                         <p>Rotating beans from Ethiopia and Colombia. Brewed slowly for maximum clarity and flavor notes.</p>
                     </div>
                 </div>
-                <div class="menu-card">
+                <div class="menu-card hover-target">
                     <div class="menu-img"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?q=80&w=800&auto=format&fit=crop" alt="Matcha"></div>
                     <div class="menu-info">
                         <h4>Ceremonial Matcha Latte <span class="price">₹200</span></h4>
@@ -285,18 +423,41 @@
         </div>
     </section>
 
+    <section class="testimonials">
+        <div class="section-header reveal" style="margin-bottom: 3rem;">
+            <p>Voices of the Village</p>
+            <h2>What They Say</h2>
+        </div>
+        
+        <div class="marquee-wrapper hover-target">
+            <div class="marquee-content" style="display: flex;">
+                <div class="testimonial-card"><p>"The best spicy miso I have ever had outside of Tokyo. Period."</p><span class="testimonial-author">- Sarah J.</span></div>
+                <div class="testimonial-card"><p>"A literal hidden gem. The atmosphere is so peaceful, and the coffee is unmatched."</p><span class="testimonial-author">- David M.</span></div>
+                <div class="testimonial-card"><p>"The pan-seared gyoza are perfectly crispy. I come here every weekend to read and eat."</p><span class="testimonial-author">- Aisha K.</span></div>
+                <div class="testimonial-card"><p>"Incredible attention to detail in everything from the decor to the latte art."</p><span class="testimonial-author">- Marcus T.</span></div>
+            </div>
+            <!-- Duplicate for seamless looping -->
+            <div class="marquee-content" style="display: flex;">
+                <div class="testimonial-card"><p>"The best spicy miso I have ever had outside of Tokyo. Period."</p><span class="testimonial-author">- Sarah J.</span></div>
+                <div class="testimonial-card"><p>"A literal hidden gem. The atmosphere is so peaceful, and the coffee is unmatched."</p><span class="testimonial-author">- David M.</span></div>
+                <div class="testimonial-card"><p>"The pan-seared gyoza are perfectly crispy. I come here every weekend to read and eat."</p><span class="testimonial-author">- Aisha K.</span></div>
+                <div class="testimonial-card"><p>"Incredible attention to detail in everything from the decor to the latte art."</p><span class="testimonial-author">- Marcus T.</span></div>
+            </div>
+        </div>
+    </section>
+
     <section id="reservations" class="reservation-section">
-        <div class="form-container reveal">
+        <div class="form-container reveal hover-target">
             <h2>Save Your Seat</h2>
             <p>Ensure your spot in the village. Walk-ins are welcome, but reservations are recommended for evenings.</p>
             <form onsubmit="event.preventDefault(); alert('Table requested! (This is a demo)');">
                 <div class="input-group">
-                    <input type="text" placeholder="Full Name" required>
-                    <input type="email" placeholder="Email Address" required>
+                    <input type="text" placeholder="Full Name" required class="hover-target">
+                    <input type="email" placeholder="Email Address" required class="hover-target">
                 </div>
                 <div class="input-group">
-                    <input type="date" required>
-                    <select required>
+                    <input type="date" required class="hover-target">
+                    <select required class="hover-target">
                         <option value="" disabled selected>Number of Guests</option>
                         <option value="1">1 Person</option>
                         <option value="2">2 People</option>
@@ -304,7 +465,7 @@
                         <option value="4">4+ People</option>
                     </select>
                 </div>
-                <button type="submit" class="btn">Book Table</button>
+                <button type="submit" class="btn hover-target">Book Table</button>
             </form>
         </div>
     </section>
@@ -325,9 +486,9 @@
             </div>
             <div class="footer-col">
                 <h4>Social</h4>
-                <a href="#">Instagram</a>
-                <a href="#">Twitter / X</a>
-                <a href="#">TikTok</a>
+                <a href="#" class="hover-target">Instagram</a>
+                <a href="#" class="hover-target">Twitter / X</a>
+                <a href="#" class="hover-target">TikTok</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -336,7 +497,76 @@
     </footer>
 
     <script>
-        // Scroll Reveal Animation
+        // 1. Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, button, input, select');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
+            target.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
+        });
+
+
+        // 2. Scroll Progress Bar
+        const progressBar = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.scrollY;
+            let docHeight = document.body.offsetHeight - window.innerHeight;
+            let scrolled = (scrollTop / docHeight) * 100;
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // 3. Typing Effect Logic
+        const textToType = "Find your center.\nFuel your spirit.";
+        const typeTarget = document.getElementById('type-text');
+        let typeIndex = 0;
+
+        function typeWriter() {
+            if (typeIndex < textToType.length) {
+                if (textToType.charAt(typeIndex) === '\n') {
+                    typeTarget.innerHTML += '<br>';
+                } else {
+                    typeTarget.innerHTML += textToType.charAt(typeIndex);
+                }
+                typeIndex++;
+                setTimeout(typeWriter, Math.random() * 50 + 50); 
+            } else {
+                typeTarget.classList.remove('typing-cursor');
+            }
+        }
+
+
+        // 4. Intro Screen Logic
+        const enterBtn = document.getElementById('enter-btn');
+        const introScreen = document.getElementById('intro-screen');
+        const body = document.body;
+
+        enterBtn.addEventListener('click', () => {
+            introScreen.classList.add('hidden');
+            body.classList.remove('no-scroll');
+            
+            // Trigger reveals and typing effect after curtain lifts
+            setTimeout(() => {
+                reveal();
+                typeWriter();
+            }, 600); 
+        });
+
+        // 5. Scroll Reveal Animation
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -348,16 +578,15 @@
             }
         }
         window.addEventListener("scroll", reveal);
-        reveal(); // Trigger on load
 
-        // Generate Floating Particles
+
+        // 6. Generate Floating Particles
         const particlesContainer = document.getElementById('particles');
-        for(let i = 0; i < 20; i++) {
+        for(let i = 0; i < 25; i++) {
             let particle = document.createElement('div');
             particle.className = 'particle';
             
-            // Randomize size, position, and animation delay
-            let size = Math.random() * 4 + 2; // 2px to 6px
+            let size = Math.random() * 4 + 2; 
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             particle.style.left = Math.random() * 100 + '%';

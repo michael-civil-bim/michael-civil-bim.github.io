@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hidden Leaf Cafe | Your New Hangout</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a100d; 
-            --bg-card: #141c18;
+            --bg-dark: #070a08; 
+            --bg-card: #111814;
             --text-main: #f0f2ef;
-            --text-muted: #9ba39e;
+            --text-muted: #8a938e;
             --accent: #e58d2e; 
             --accent-hover: #ff9d33;
+            --glass-bg: rgba(17, 24, 20, 0.6);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,165 +24,163 @@
             color: var(--text-main); 
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+        h1, h2, h3, .logo { font-family: 'Cormorant Garamond', serif; }
 
         /* Navigation */
         header {
             position: fixed;
             top: 0; width: 100%;
-            padding: 1.5rem 5%;
+            padding: 1.2rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 16, 13, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(7, 10, 8, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255,255,255,0.05);
             z-index: 1000;
         }
 
-        .logo { font-size: 1.8rem; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 1px; }
+        .logo { font-size: 2rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
         
         .nav-links a {
             color: var(--text-main);
             text-decoration: none;
             margin-left: 2.5rem;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: color 0.3s;
             text-transform: uppercase;
             letter-spacing: 2px;
+            font-weight: 500;
         }
         .nav-links a:hover { color: var(--accent); }
 
-        /* Hero Section */
+        /* Hero Section with Floating Embers */
         .hero {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(10, 16, 13, 0.4), rgba(10, 16, 13, 0.9)), 
+            position: relative;
+            background: linear-gradient(rgba(7, 10, 8, 0.6), rgba(7, 10, 8, 1)), 
                         url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2000&auto=format&fit=crop') center/cover;
             padding: 0 1.5rem;
+            overflow: hidden;
         }
 
+        /* Floating particles */
+        .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .particle {
+            position: absolute;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 8s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) translateX(20px); opacity: 0; }
+        }
+
+        .hero-content { position: relative; z-index: 2; }
         .hero-content h1 {
-            font-size: clamp(3.5rem, 8vw, 6.5rem);
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 4px 20px rgba(0,0,0,0.8);
         }
-
         .hero-content p {
-            font-size: 1.2rem;
-            color: #d1d6d3;
-            max-width: 600px;
-            margin: 0 auto 2.5rem auto;
-            letter-spacing: 1px;
+            font-size: 1.2rem; color: #d1d6d3; max-width: 650px; margin: 0 auto 2.5rem auto; letter-spacing: 1px;
         }
 
         .btn {
-            background: var(--accent);
-            color: #000;
-            padding: 1rem 3rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            display: inline-block;
+            background: var(--accent); color: #000; padding: 1rem 3rem; border-radius: 50px;
+            text-decoration: none; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+            transition: all 0.3s ease; display: inline-block; border: 1px solid var(--accent);
         }
-        .btn:hover { background: var(--accent-hover); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(229, 141, 46, 0.3); }
+        .btn:hover { background: transparent; color: var(--accent); box-shadow: 0 10px 20px rgba(229, 141, 46, 0.2); transform: translateY(-3px); }
 
-        /* Section Formatting */
+        /* General Sections */
         section { padding: 8rem 5%; max-width: 1400px; margin: 0 auto; }
-        
         .section-header { text-align: center; margin-bottom: 5rem; }
         .section-header h2 { font-size: 3.5rem; color: var(--accent); margin-bottom: 1rem; }
-        .section-header p { color: var(--text-muted); font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase; }
+        .section-header p { color: var(--text-muted); font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* Menu Grid */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
+        /* Story Section */
+        .story-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .story-text h3 { font-size: 2.5rem; margin-bottom: 1.5rem; }
+        .story-text p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1.1rem; }
+        .story-img { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .story-img img { width: 100%; height: auto; display: block; filter: brightness(0.85); transition: 0.5s; }
+        .story-img:hover img { filter: brightness(1); transform: scale(1.03); }
 
+        /* Expanded Menu */
+        .menu-category { margin-bottom: 4rem; }
+        .menu-category h3 { font-size: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem; color: var(--text-main); }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; }
+        
         .menu-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.03);
-            transition: transform 0.4s ease, border-color 0.4s ease;
+            background: var(--bg-card); border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.03); transition: all 0.4s ease;
         }
-
-        .menu-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-        }
-
-        .menu-img {
-            height: 240px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .menu-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-
-        .menu-card:hover .menu-img img { transform: scale(1.1); }
-
+        .menu-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(0,0,0,0.6); }
+        
+        .menu-img { height: 260px; width: 100%; overflow: hidden; }
+        .menu-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; filter: brightness(0.9); }
+        .menu-card:hover .menu-img img { transform: scale(1.1); filter: brightness(1); }
+        
         .menu-info { padding: 2rem; }
-        .menu-info h3 { font-size: 1.8rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
-        .price { color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; }
+        .menu-info h4 { font-size: 1.6rem; font-family: 'Cormorant Garamond', serif; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+        .price { color: var(--accent); font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 1.2rem; }
         .menu-info p { color: var(--text-muted); font-size: 0.95rem; }
 
-        /* Vibe/Gallery */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+        /* Reservation Form (Glassmorphism) */
+        .reservation-section {
+            background: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1500&auto=format&fit=crop') center/cover;
+            padding: 8rem 5%; position: relative;
         }
-        .gallery-item {
-            height: 400px;
-            border-radius: 16px;
-            overflow: hidden;
+        .reservation-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7,10,8,0.85); }
+        
+        .form-container {
+            position: relative; z-index: 2; max-width: 700px; margin: 0 auto;
+            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            padding: 4rem; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); text-align: center;
         }
-        .gallery-item img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: filter 0.4s ease, transform 0.6s ease;
-            filter: grayscale(40%) brightness(0.8);
+        .form-container h2 { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+        .form-container p { color: var(--text-muted); margin-bottom: 3rem; }
+        
+        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        input, select {
+            width: 100%; padding: 1.2rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+            color: white; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 1rem; outline: none; transition: 0.3s;
         }
-        .gallery-item:hover img {
-            filter: grayscale(0%) brightness(1);
-            transform: scale(1.05);
-        }
+        input:focus, select:focus { border-color: var(--accent); background: rgba(0,0,0,0.6); }
+        .form-container .btn { width: 100%; margin-top: 1rem; cursor: pointer; }
 
         /* Footer */
-        footer {
-            background: #060907;
-            padding: 4rem 5%;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        footer h2 { font-size: 2.5rem; color: var(--text-main); margin-bottom: 1.5rem; }
-        footer p { color: var(--text-muted); margin-bottom: 2rem; }
+        footer { background: #040605; padding: 5rem 5% 2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; max-width: 1400px; margin: 0 auto; margin-bottom: 4rem; }
+        .footer-col h4 { color: var(--accent); font-size: 1.4rem; margin-bottom: 1.5rem; font-family: 'Cormorant Garamond', serif; }
+        .footer-col p, .footer-col a { color: var(--text-muted); text-decoration: none; display: block; margin-bottom: 0.8rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--text-main); }
+        .footer-bottom { text-align: center; color: #4a524e; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2rem; }
 
         /* Animations */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 900px) {
-            .gallery-grid { grid-template-columns: 1fr; }
+            .story-container { grid-template-columns: 1fr; }
             .nav-links { display: none; }
-            .gallery-item { height: 300px; }
+            .input-group { grid-template-columns: 1fr; }
+            .form-container { padding: 2rem; }
         }
     </style>
 </head>
@@ -190,81 +189,154 @@
     <header>
         <div class="logo">Hidden Leaf</div>
         <div class="nav-links">
-            <a href="#menu">Our Menu</a>
-            <a href="#vibe">The Vibe</a>
-            <a href="#visit">Visit Us</a>
+            <a href="#story">Our Story</a>
+            <a href="#menu">Menu</a>
+            <a href="#reservations">Reservations</a>
         </div>
     </header>
 
     <div class="hero">
+        <div class="particles" id="particles"></div>
         <div class="hero-content reveal active">
-            <h1>Come for the coffee.<br>Stay for the chakra.</h1>
-            <p>Your new favorite hangout. Hand-crafted ramen, specialty coffee, and a cozy aesthetic tucked away from the noise.</p>
-            <a href="#menu" class="btn">Explore Menu</a>
+            <h1>Find your center.<br>Fuel your spirit.</h1>
+            <p>Hand-pulled noodles, slow-simmered broths, and specialty coffee poured with precision. Welcome to the village's best kept secret.</p>
+            <a href="#menu" class="btn">View The Menu</a>
         </div>
     </div>
 
+    <section id="story">
+        <div class="story-container reveal">
+            <div class="story-img">
+                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000&auto=format&fit=crop" alt="Cafe Interior">
+            </div>
+            <div class="story-text">
+                <p style="color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-size: 0.9rem;">The Tradition</p>
+                <h3>A quiet corner in a loud world.</h3>
+                <p>Hidden Leaf Cafe was born from a simple desire: to create a sanctuary where time slows down. We believe that a perfect bowl of ramen takes patience, and a great cup of coffee requires focus.</p>
+                <p>Every ingredient is locally sourced, every broth is simmered for 18 hours, and every pour-over is weighed to the exact gram. It’s not just food; it’s an art form.</p>
+            </div>
+        </div>
+    </section>
+
     <section id="menu">
         <div class="section-header reveal">
-            <p>Taste the Village</p>
-            <h2>Signature Servings</h2>
+            <p>Culinary Arts</p>
+            <h2>The Village Menu</h2>
         </div>
         
-        <div class="menu-grid">
-            <div class="menu-card reveal">
-                <div class="menu-img">
-                    <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800&auto=format&fit=crop" alt="Spicy Miso Ramen">
+        <div class="menu-category reveal">
+            <h3>Ramen Bowls</h3>
+            <div class="menu-grid">
+                <div class="menu-card">
+                    <div class="menu-img"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=800&auto=format&fit=crop" alt="Spicy Miso"></div>
+                    <div class="menu-info">
+                        <h4>Spicy Fire Miso <span class="price">₹350</span></h4>
+                        <p>18-hour pork broth, house-made chili paste, chashu pork, soft egg, bamboo shoots, scallions.</p>
+                    </div>
                 </div>
-                <div class="menu-info">
-                    <h3>Spicy Miso Ramen <span class="price">₹350</span></h3>
-                    <p>Rich pork broth, chili oil, soft-boiled egg, fresh scallions, and nori. A village classic.</p>
-                </div>
-            </div>
-            
-            <div class="menu-card reveal" style="transition-delay: 0.1s;">
-                <div class="menu-img">
-                    <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=800&auto=format&fit=crop" alt="Hidden Leaf Special Brew">
-                </div>
-                <div class="menu-info">
-                    <h3>Leaf Special Pour-Over <span class="price">₹180</span></h3>
-                    <p>Single-origin arabica beans, slowly dripped to perfection with subtle hints of dark chocolate and orange.</p>
+                <div class="menu-card">
+                    <div class="menu-img"><img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?q=80&w=800&auto=format&fit=crop" alt="Shoyu Ramen"></div>
+                    <div class="menu-info">
+                        <h4>Classic Shoyu <span class="price">₹320</span></h4>
+                        <p>Clear chicken and soy sauce broth, roasted pork belly, nori seaweed, narutomaki, and spring onions.</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="menu-card reveal" style="transition-delay: 0.2s;">
-                <div class="menu-img">
-                    <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?q=80&w=800&auto=format&fit=crop" alt="Crispy Dumplings">
+        <div class="menu-category reveal">
+            <h3>Sides & Shareables</h3>
+            <div class="menu-grid">
+                <div class="menu-card">
+                    <div class="menu-img"><img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?q=80&w=800&auto=format&fit=crop" alt="Gyoza"></div>
+                    <div class="menu-info">
+                        <h4>Pan-Seared Gyoza <span class="price">₹220</span></h4>
+                        <p>Six handmade pork and cabbage dumplings, crisped to perfection. Served with black vinegar dip.</p>
+                    </div>
                 </div>
-                <div class="menu-info">
-                    <h3>Pan-Seared Gyoza <span class="price">₹220</span></h3>
-                    <p>Crispy on the bottom, juicy on the inside. Served with our signature house-made soy vinegar dipping sauce.</p>
+                <div class="menu-card">
+                    <div class="menu-img"><img src="https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?q=80&w=800&auto=format&fit=crop" alt="Karaage"></div>
+                    <div class="menu-info">
+                        <h4>Chicken Karaage <span class="price">₹260</span></h4>
+                        <p>Japanese-style double-fried chicken bites, served with yuzu mayo and a wedge of lemon.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-category reveal">
+            <h3>Brews & Matcha</h3>
+            <div class="menu-grid">
+                <div class="menu-card">
+                    <div class="menu-img"><img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=800&auto=format&fit=crop" alt="Pour Over"></div>
+                    <div class="menu-info">
+                        <h4>Single Origin Pour-Over <span class="price">₹180</span></h4>
+                        <p>Rotating beans from Ethiopia and Colombia. Brewed slowly for maximum clarity and flavor notes.</p>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="menu-img"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?q=80&w=800&auto=format&fit=crop" alt="Matcha"></div>
+                    <div class="menu-info">
+                        <h4>Ceremonial Matcha Latte <span class="price">₹200</span></h4>
+                        <p>Premium grade Uji matcha, hand-whisked and poured over lightly sweetened oat milk.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="vibe">
-        <div class="section-header reveal">
-            <p>The Atmosphere</p>
-            <h2>Step Inside</h2>
-        </div>
-        <div class="gallery-grid">
-            <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop" alt="Cafe Interior"></div>
-            <div class="gallery-item reveal" style="transition-delay: 0.1s;"><img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?q=80&w=800&auto=format&fit=crop" alt="Coffee Pour"></div>
-            <div class="gallery-item reveal" style="transition-delay: 0.2s;"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop" alt="Neon Sign"></div>
+    <section id="reservations" class="reservation-section">
+        <div class="form-container reveal">
+            <h2>Save Your Seat</h2>
+            <p>Ensure your spot in the village. Walk-ins are welcome, but reservations are recommended for evenings.</p>
+            <form onsubmit="event.preventDefault(); alert('Table requested! (This is a demo)');">
+                <div class="input-group">
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <input type="date" required>
+                    <select required>
+                        <option value="" disabled selected>Number of Guests</option>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4+ People</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Book Table</button>
+            </form>
         </div>
     </section>
 
-    <footer id="visit">
-        <div class="reveal">
-            <h2>Find Your Spot.</h2>
-            <p>Open Monday to Sunday | 10:00 AM – 11:00 PM</p>
-            <p style="margin-bottom: 2rem;">123 Village Road, Near The Center<br>Call us: +91 98765 43210</p>
-            <a href="#" class="btn">Order Online</a>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Hidden Leaf Cafe</h4>
+                <p>A modern sanctuary for traditional flavors. Come for the ramen, stay for the peace.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Visit Us</h4>
+                <p>123 Village Road, <br>Near The Hokage Monument<br>Konoha, KN 12345</p>
+            </div>
+            <div class="footer-col">
+                <h4>Hours</h4>
+                <p>Mon-Thu: 10am - 10pm<br>Fri-Sun: 10am - Midnight</p>
+            </div>
+            <div class="footer-col">
+                <h4>Social</h4>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter / X</a>
+                <a href="#">TikTok</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Hidden Leaf Cafe. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
+        // Scroll Reveal Animation
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -277,7 +349,23 @@
         }
         window.addEventListener("scroll", reveal);
         reveal(); // Trigger on load
+
+        // Generate Floating Particles
+        const particlesContainer = document.getElementById('particles');
+        for(let i = 0; i < 20; i++) {
+            let particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Randomize size, position, and animation delay
+            let size = Math.random() * 4 + 2; // 2px to 6px
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            
+            particlesContainer.appendChild(particle);
+        }
     </script>
 </body>
 </html>
-   
